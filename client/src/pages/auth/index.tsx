@@ -51,19 +51,28 @@ const Auth: React.FunctionComponent = (): JSX.Element => {
     return true;
   }
 
-    const handleLogin=async()=>{
-       if(validateLogin()){
-       const response=await apiClient.post(LOGIN_ROUTE,{email,password},{withCredentials:true});
-       if(response.data.user.id){
-        setUserInfo(response.data.user)
-        if(response.data.user.profileSetup){
-          navigate("/chat")
-        }else{
-          navigate("/profile")
+    const handleLogin = async () => {
+      if (validateLogin()) {
+        try {
+          const response = await apiClient.post(
+            LOGIN_ROUTE,
+            { email, password },
+            { withCredentials: true }
+          );
+          if (response.data.user.id) {
+            setUserInfo(response.data.user);
+            if (response.data.user.profileSetup) {
+              navigate("/chat");
+            } else {
+              navigate("/profile");
+            }
+          }
+        } catch (err: any) {
+          console.log(err.response.data)
+          toast.error(err.response.data)
         }
-       }
-       }
-    }
+      }
+    };
 
     const handleSignUp=async()=>{
        if(validateSignup()){
